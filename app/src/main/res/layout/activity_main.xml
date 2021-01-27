@@ -20,6 +20,14 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@drawable/kite" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Bugsplat! Tap the camera or the file button to count the number of dead bugs on your windshield!"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <ImageView
         android:id="@+id/camera_icon"

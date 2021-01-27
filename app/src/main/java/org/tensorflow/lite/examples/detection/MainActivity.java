@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = findViewById(R.id.imageView);
+        textView = findViewById(R.id.textView);
         initDetector();
     }
 
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private Classifier detector;
 
     private ImageView imageView;
+    private TextView textView;
 
     private void initDetector(){
         try {
@@ -82,6 +85,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void updateNumberOfConfidentDetectionsDisplayed(int numberOfConfidentDetections){
+        String count = String.valueOf(numberOfConfidentDetections);
+        String plural = "";
+        if(numberOfConfidentDetections != 1){
+            plural = "s";
+        }
+        String displayText = count + " bugsplat" + plural + " detected";
+        textView.setText(displayText);
+    }
+
     private void handleResult(Bitmap bitmap, List<Classifier.Recognition> results) {
         final Canvas canvas = new Canvas(bitmap);
         final Paint paint = new Paint();
@@ -89,13 +102,16 @@ public class MainActivity extends AppCompatActivity {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(2.0f);
 
+        int numberOfConfidentDetections = 0;
         for (final Classifier.Recognition result : results) {
             final RectF location = result.getLocation();
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
                 canvas.drawRect(location, paint);
+                numberOfConfidentDetections++;
             }
         }
         imageView.setImageBitmap(bitmap);
+        updateNumberOfConfidentDetectionsDisplayed(numberOfConfidentDetections);
     }
 
     public void cameraButtonTap(View v){
