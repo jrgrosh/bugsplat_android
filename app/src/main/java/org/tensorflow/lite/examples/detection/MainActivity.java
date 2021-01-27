@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -28,7 +29,9 @@ import org.tensorflow.lite.examples.detection.tflite.Classifier;
 import org.tensorflow.lite.examples.detection.tflite.YoloV4Classifier;
 import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     // Minimum detection confidence to track a detection.
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.05f;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int PICK_IMAGE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +103,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void uploadButtonTap(View v){
-
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
     }
 
     private void dispatchTakePictureIntent() {
@@ -111,25 +118,42 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    protected void doInferenceOnBitmap(Bitmap bitmap){
+        final Bitmap  croppedBitmap = Utils.processBitmap(bitmap, TF_OD_API_INPUT_SIZE);
+        imageView.setImageBitmap(croppedBitmap);
+        Log.d("bugsplat", "hello");
+
+        Handler handler = new Handler();
+        new Thread(() -> {
+            final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    handleResult(croppedBitmap, results);
+                }
+            });
+        }).start();
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            final Bitmap  imageBitmap1 = Utils.processBitmap(imageBitmap, TF_OD_API_INPUT_SIZE);
-            imageView.setImageBitmap(imageBitmap1);
-            Log.d("bugsplat", "hello");
+            doInferenceOnBitmap(imageBitmap);
 
-            Handler handler = new Handler();
-            new Thread(() -> {
-                final List<Classifier.Recognition> results = detector.recognizeImage(imageBitmap1);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        handleResult(imageBitmap1, results);
-                    }
-                });
-            }).start();
+        } else if (requestCode == PICK_IMAGE && resultCode == RESULT_OK){
+            if (data == null) {
+                //Display an error
+                return;
+            }
+            try {
+                InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                doInferenceOnBitmap(bitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
