@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.os.Environment;
 import android.util.Log;
 
@@ -167,6 +168,18 @@ public class Utils {
 
         return croppedBitmap;
     }
+
+    /*public static void invertStuff(Bitmap source, int size, RectF rect){
+        int image_height = source.getHeight();
+        int image_width = source.getWidth();
+
+        Matrix cropToFrameTransformations = getTransformationMatrix(size,size,image_width,image_height,0,false);
+        Matrix frameToCropTransformations = new Matrix();
+        cropToFrameTransformations.invert(frameToCropTransformations);
+        //cropToFrameTransformations.
+
+        //so transform rect somehow... to get bounding box on original image
+    }*/
 
     public static void writeToFile(String data, Context context) {
         try {

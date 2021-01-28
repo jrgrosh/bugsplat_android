@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = findViewById(R.id.imageView);
-        textView = findViewById(R.id.textView);
+        detectionCountTextView = findViewById(R.id.detectionCountTextView);
+        instructionsTextView = findViewById(R.id.instructionsTextView);
         initDetector();
     }
 
@@ -64,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
     private Classifier detector;
 
     private ImageView imageView;
-    private TextView textView;
+    private TextView detectionCountTextView;
+    private TextView instructionsTextView;
 
     private void initDetector(){
         try {
@@ -92,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
             plural = "s";
         }
         String displayText = count + " bugsplat" + plural + " detected";
-        textView.setText(displayText);
+        detectionCountTextView.setText(displayText);
+        detectionCountTextView.setVisibility(View.VISIBLE);
     }
 
     private void handleResult(Bitmap bitmap, List<Classifier.Recognition> results) {
@@ -112,6 +115,11 @@ public class MainActivity extends AppCompatActivity {
         }
         imageView.setImageBitmap(bitmap);
         updateNumberOfConfidentDetectionsDisplayed(numberOfConfidentDetections);
+    }
+
+    private void hideText(){
+        //detectionCountTextView.setText("...");
+        instructionsTextView.setVisibility(View.GONE);
     }
 
     public void cameraButtonTap(View v){
@@ -153,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        detectionCountTextView.setText("...");
+        hideText();
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
