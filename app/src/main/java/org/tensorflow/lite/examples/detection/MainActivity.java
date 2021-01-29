@@ -34,6 +34,8 @@ import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -115,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         imageView.setImageBitmap(bitmap);
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, imageFileName, "bugs");
         updateNumberOfConfidentDetectionsDisplayed(numberOfConfidentDetections);
     }
 
