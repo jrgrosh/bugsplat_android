@@ -1,5 +1,6 @@
 package org.tensorflow.lite.examples.detection;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ActivityNotFoundException;
@@ -181,5 +182,13 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void aboutIconTap(View view) {
+        Log.d("bugsplat", "aboutIconTap pressed");
+        new AlertDialog.Builder(this)
+                .setTitle("Open Source Acknowledgement")
+                .setMessage("This application includes software licensed under the Apache License 2.0")
+                .show();
     }
 }
