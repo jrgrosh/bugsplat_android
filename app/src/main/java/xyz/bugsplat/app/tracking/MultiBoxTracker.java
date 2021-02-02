@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-package org.tensorflow.lite.examples.detection.tracking;
+package xyz.bugsplat.app.tracking;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -30,10 +30,10 @@ import android.util.TypedValue;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import org.tensorflow.lite.examples.detection.env.BorderedText;
-import org.tensorflow.lite.examples.detection.env.ImageUtils;
-import org.tensorflow.lite.examples.detection.env.Logger;
-import org.tensorflow.lite.examples.detection.tflite.Classifier.Recognition;
+import xyz.bugsplat.app.env.BorderedText;
+import xyz.bugsplat.app.env.ImageUtils;
+import xyz.bugsplat.app.env.Logger;
+import xyz.bugsplat.app.tflite.Classifier.Recognition;
 
 /** A tracker that handles non-max suppression and matches existing objects to new detections. */
 public class MultiBoxTracker {

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.tensorflow.lite.examples.detection">
+    package="xyz.bugsplat.app">
 
     <uses-sdk />
 
@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme.ObjectDetection">
 
         <activity
-            android:name=".MainActivity"
+            android:name="xyz.bugsplat.app.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
